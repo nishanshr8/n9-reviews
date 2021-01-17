@@ -1,0 +1,17 @@
+{
+    "name": "nishan/n9-reviews",
+    "description": "A plugin for social reviews",
+    "type": "wordpress-plugin",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "nishanshr8",
+            "email": "nishanshr8@github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": { "Inc\\": "./inc" } 
+    }
+}
