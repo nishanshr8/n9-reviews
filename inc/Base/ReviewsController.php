@@ -6,24 +6,20 @@
  namespace Inc\Base;
 
  use Inc\Base\BaseController;
- use Inc\Base\Interfaces\Registerable;
+ use \Inc\Interfaces\Registerable;
 
  class ReviewsController extends BaseController implements Registerable {
 
-    /**
-     * 
-     */
-    public function __construct() {
-        parent::__construct();
-    }
+    public $settings;
 
     /**
      * 
      */
     public function register() {
 
+        $this->settings = new \Inc\Api\SettingsApi();
+
         add_action( 'init', array( $this, 'register_review_posts') );
-        //todo: register an admin page
 
     }
 
@@ -42,14 +38,14 @@
                     'singular_name' => 'Review',
                     'plural_name'   => 'Reviews'
                 ),
-                'label'         => 'Review',
+                'label'         => 'Reviews',
                 'description'   => __( 'This post type holds the reviews entered by users', ''),
                 'supports'      => array( 'title', 'editor', 'author' ),
                 'hierarchial'   => false,
                 'public'        => true,
                 'show_ui'       => true,
-                'show_in_menu'  => true,
-                'menu_postion'  => 5,
+                'show_in_menu'  => 'n9-reviews-page', // taken from slug used in dashboard menu item
+                'menu_postion'  => 2,
                 'show_in_admin_bar' => false,
                 'show_in_nav_menus' => false,
                 'show_in_rest'  => true,

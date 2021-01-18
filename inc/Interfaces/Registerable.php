@@ -4,7 +4,7 @@
  * @package n9-reviews
  */
 
- namespace Inc\Base\Interfaces;
+ namespace Inc\Interfaces;
 
  interface Registerable {
      public function register();

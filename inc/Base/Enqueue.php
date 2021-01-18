@@ -6,7 +6,7 @@
  namespace Inc\Base;
 
  use Inc\Base\BaseController;
- use Inc\Base\Interfaces\Registerable;
+ use \Inc\Interfaces\Registerable;
 
  class Enqueue extends BaseController implements Registerable {
 
