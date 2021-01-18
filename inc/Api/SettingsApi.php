@@ -59,7 +59,7 @@
                 $page['menu_title'],
                 $page['capability'],
                 $page['menu_slug'],
-                $page['callable'],
+                $page['callback'],
                 $page['icon_url'],
                 $page['position']
             );

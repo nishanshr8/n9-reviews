@@ -31,7 +31,7 @@ class Dashboard extends BaseController implements Registerable
             'menu_title'    => 'Reviews',
             'capability'    => 'manage_options',
             'menu_slug'     => 'n9-reviews-page',
-            'callable'      => function() {
+            'callback'      => function() {
                 echo "<h1>Say Hello!</h1>";
             },
             'icon_url'      => 'dashicons-superhero-alt',

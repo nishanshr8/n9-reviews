@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInite9d853746a28ecafaa6f58443b6ad3b2
 {
+    public static $files = array (
+        '20193a47fadb154e37226285dd9ecdeb' => __DIR__ . '/../..' . '/inc/Api/Helpers/InputSanitizer.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'I' => 
         array (
