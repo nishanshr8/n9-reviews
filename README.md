@@ -2,4 +2,5 @@
 A test plugin for reviews. 
 
 # Under Construction
-- This plugin is intended to pull google reviews and facebook reviews and save it as custom post type.
+- Needs to allow users to add review to a post
+- Add option for Admin to enable/disable reviews for a post type
