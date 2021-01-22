@@ -95,14 +95,13 @@
                 'field' => 'n9r-comment-visibility',
             )
         ];
+        //TODO: comment and rating star and not to be updated from backend
         foreach ( $fields as $field ) {
-            if ( array_key_exists( $field['field'], $_POST ) ) {
-                update_post_meta( 
-                    $post_id, 
-                    $field['field'], 
-                    n9_sanitize( $field['type'], $_POST[$field['field']] 
-                ) );
-            }
+            update_post_meta( 
+                $post_id, 
+                $field['field'], 
+                n9_sanitize( $field['type'], $_POST[$field['field']] )
+            );
         }
 
     }

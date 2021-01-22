@@ -9,8 +9,11 @@ function n9_sanitize(string $type, $value)
         return sanitize_text_field($value);
     } elseif ('textarea' === $type) {
         return sanitize_textarea_field($value);
-    } else {
-        //default
+    } elseif ('checkbox' === $type) {
+        return sanitize_text_field($value);
+    }
+    else {
+        //default may be use sanitize
         return $value;
     }
 }

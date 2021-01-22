@@ -36,7 +36,9 @@ final class Init
         return [
             Base\Enqueue::class,
             Pages\Dashboard::class,
-            Base\ReviewsController::class
+            Base\ReviewsController::class,
+            // Forms\ReviewForm::class,
+            Widget\ReviewFormWidget::class
         ];
     }
 

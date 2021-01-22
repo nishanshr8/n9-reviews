@@ -5,6 +5,8 @@
 ?>
 
 <div>
+    <h3>Needs Styling help</h3>
+
     <div class="meta-options">
         <label for="n9r-rating-star">Rating:</label>
         <input 
@@ -13,6 +15,8 @@
             min="0" 
             name="n9r-rating-star"
             id="n9r-rating-star"
+            tab-index="1"
+            readonly
             value="<?= get_post_meta( get_the_ID(), 'n9r-rating-star', true); ?>"
         >
     </div>
@@ -23,9 +27,10 @@
             name="n9r-reviews-comment" 
             id="n9r-reviews-comment" 
             cols="30" 
-            rows="10"
-            value="<?= get_post_meta( get_the_ID(), 'n9r-reviews-comment', true); ?>"
-        ></textarea>
+            rows="8"
+            tab-index="1"
+            readonly
+        ><?=  get_post_meta( get_the_ID(), 'n9r-reviews-comment', true) ?></textarea>
     </div>
 
     <div class="meta-options">
@@ -34,9 +39,10 @@
             type="checkbox"
             name="n9r-comment-visibility"
             id="n9r-comment-visibility"
-            tab-index="-1"
+            tab-index="1"
             title="Comment Visibility"
-            value="<?= get_post_meta( get_the_ID(), 'n9r-comment-visibility', true ); ?>"
+            value="comment_visible"
+            <?= ( "comment_visible" == get_post_meta( get_the_ID(), 'n9r-comment-visibility', true ) ) ? 'checked' : '' ?>
         >
     </div>
 
