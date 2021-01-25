@@ -10,7 +10,15 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "symfony/validator": "5.x-dev",
+        "symfony/form": "5.x-dev",
+        "symfony/twig-bridge": "5.x-dev",
+        "symfony/translation": "5.x-dev",
+        "symfony/config": "5.x-dev",
+        "symfony/security-csrf": "5.x-dev",
+        "symfony/http-foundation": "5.x-dev"
+    },
     "autoload": {
         "psr-4": { "Inc\\": "./inc" },
         "files" : [

@@ -24,11 +24,26 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use \Inc\Interfaces\Registerable;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
+use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
+
 
 class ReviewForm
 {
+    public $csrfManager;
     public function __construct() {
         $this->register_form_factory();
+
+        add_action('init', function(){
+            session_start();
+        });
     }
 
     public function register_form_factory()
@@ -37,12 +52,22 @@ class ReviewForm
         $vendorFormDirectory = $vendorDirectory . '/symfony/form';
         $vendorValidatorDirectory = $vendorDirectory . '/symfony/validator';
 
+
+        // creates a Session object from the HttpFoundation component
+        $session = new Session();
+
+        $csrfGenerator = new UriSafeTokenGenerator();
+        $csrfStorage = new SessionTokenStorage($session);
+        // $csrfStorage = new NativeSessionTokenStorage(); 
+        $this->csrfManager = new CsrfTokenManager($csrfGenerator, $csrfStorage);
+
         // creates the validator - details will vary
         $validator = Validation::createValidator();
 
         return $formFactory = Forms::createFormFactoryBuilder()
             ->addExtension(new HttpFoundationExtension())
             ->addExtension(new ValidatorExtension($validator))
+            // ->addExtension(new CsrfExtension($this->csrfManager))
             ->getFormFactory();
     }
 
@@ -60,11 +85,13 @@ class ReviewForm
         // the path to your other templates
         $viewsDirectory = realpath(__DIR__ . '/../Views');
 
+
         $twig = new Environment(new FilesystemLoader([
             $viewsDirectory,
             $vendorTwigBridgeDirectory . '/Resources/views/Form',
         ]));
         $formEngine = new TwigRendererEngine([$defaultFormTheme], $twig);
+        $csrfManager = $this->csrfManager;
         $twig->addRuntimeLoader(new FactoryRuntimeLoader([
             FormRenderer::class => function () use ($formEngine, $csrfManager) {
                 return new FormRenderer($formEngine, $csrfManager);
@@ -94,7 +121,7 @@ class ReviewForm
 
     public function create_form()
     {
-        $form = $this->register_form_factory()->createBuilder(FormType::class, $defaults)
+        $form = $this->register_form_factory()->createBuilder(FormType::class, null)
             ->add('rating-stars', NumberType::class, [
                 'attr'  => [
                     'class' => 'textfield',
@@ -116,6 +143,57 @@ class ReviewForm
                 'data'  => get_the_ID()
             ])
             ->getForm();
+
+        $request = Request::createFromGlobals();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            var_dump($data);
+            $post_id = wp_insert_post( array(
+                    'post_type'         => 'n9-review',
+                    'post_title'        => 'some title',
+                    'post_status'       => 'publish',
+                    'comment_status'    => 'closed',
+                    'ping_status'       => 'closed'
+                )
+            );
+
+            if ( $post_id ) {
+                //    'rating-stars' => float 2
+                //   'comment' => string 'jjksdf' (length=6)
+                //   'postId
+                $fields = [
+                    array(
+                        'type'  => 'text',
+                        'field' => 'n9r-rating-star',
+                        'value' => $data['rating-stars']
+                    ),
+                    array(
+                        'type'  => 'textarea',
+                        'field' => 'n9r-reviews-comment',
+                        'value' => $data['comment']
+                    )
+                ];
+                //TODO: comment and rating star and not to be updated from backend
+                foreach ( $fields as $field ) {
+                    update_post_meta( 
+                        $post_id, 
+                        $field['field'], 
+                        n9_sanitize( $field['type'], $field['value'] )
+                    );
+                }
+            }
+
+            // ... perform some action, such as saving the data to the database
+
+            $response = new RedirectResponse('/success');
+            $response->prepare($request);
+
+            return $response->send();
+        }
 
         echo ($this->register_twig()->render('new.html.twig', [
             'form' => $form->createView(),
